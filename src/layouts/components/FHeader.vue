@@ -4,15 +4,6 @@
           <el-icon><eleme-filled /></el-icon>
            后台管理
         </span>
-        <el-icon class="icon-btn"><fold/>
-        </el-icon>
-        <el-tooltip
-          effect="dark"
-          content="刷新"
-          placement="bottom">
-        <el-icon class="icon-btn" @click="handleRefresh"><refresh /></el-icon>
-        </el-tooltip>
-       <div class="ml-auto flex items-center">
         <el-tooltip
           effect="dark"
           content="全屏"
@@ -23,6 +14,16 @@
         </el-icon>
         </el-tooltip>
         
+        <el-tooltip
+          effect="dark"
+          content="刷新"
+          placement="bottom">
+        <el-icon class="icon-btn" @click="handleRefresh"><refresh /></el-icon>
+        </el-tooltip>
+       <div class="ml-auto flex items-center">
+        <el-icon class="icon-btn"><fold/>
+        </el-icon>
+        
      <el-dropdown class="dropdown" @command="handleCommand">
         <span class="flex items-center text-light-50 ">
        <el-avatar class="mr-2" size="25" :src="$store.state.user.avatar"/>
@@ -32,7 +33,7 @@
        </el-icon>
        </span>
         <template #dropdown>
-            <el-dropdown-menu>
+            <el-dropdown-menu >
             <el-dropdown-item command="rePassword" >修改密码</el-dropdown-item>
             <el-dropdown-item command="logout" @click="handleLogout">退出登录</el-dropdown-item>
             </el-dropdown-menu>         

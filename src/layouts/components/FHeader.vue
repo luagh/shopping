@@ -62,83 +62,45 @@
     </FormDrawer>
 </template>
 <script setup>
-import {showModal,toast } from "~/composables/util"
-import {logout,updatepassword} from "~/api/manager"
-import {useRouter} from 'vue-router'
-import {useStore} from 'vuex'
+
 import {useFullscreen} from '@vueuse/core'
-import { ref ,reactive} from 'vue'
 import FormDrawer from "~/components/FormDrawer.vue"
+import { useRepassword,useLogout } from '~/composables/useManager'
+//isFullscreen 是否全屏 //toggle切花全屏
+const { isFullscreen, toggle } = useFullscreen()
 
-// //修改密码
+const { formDrawerRef,
+        form,
+        rules,
+        formRef,
+        onSubmit,
+        openRePassWordForm }= useRepassword()
 
-const formDrawerRef =ref(null)
+const {handleLogout} = useLogout()
 
-const {isFullscreen,toggle }=useFullscreen()
+//
+const handleCommand = (c) => {
+    //console.log(c);
+    switch (c) {
+        case "logout":
+            handleLogout()
+            break;
+        case "rePassword":
+            // showDrawer.value =true
+            openRePassWordForm()
+            break;
+        default:
+            break;
+    }
 
-const router =useRouter()
-const store =useStore()
-
-
-const form = reactive({
-    oldpassword:"",
-    password:"",
-    repassword:""
-
-})
-
-const rules={
-    oldpassword:[{required:true,message:'新密码不能为空',trigger:'blur'}],
-    password:[{required:true,message:'旧密码不能为空',trigger:'blur'}],
-    repassword:[{required:true,message:'确认密码不能为空',trigger:'blur'}],
-}
-const formRef =ref(null)
-const onSubmit = () => {
-    formRef.value.validate( (valid)=>{
-   if(!valid){
-    return false
-   }
-formDrawerRef.value.showLoading()
-  updatepassword(form)
-  .then(res=>{
-    toast("修改密码成功，请重新登录")
-     store.dispatch("logout")
-        //跳转回登录页
-        router.push("/login")
-})
-.finally(()=>{
-    formDrawerRef.value.hideLoading()
-})
-    })    
 }
 
- const handleCommand =(c)=> {
-    switch (c){
-     case "logout":
-     handleLogout()
-     break;
-     case "rePassword":
-    // showDrawer.value = true
-formDrawerRef.value.open()
-     break;
-     }
+
+
+//刷新
+function handleRefresh() {
+    location.reload()
 }
-
-   //刷新
-  const handleRefresh = ()=>location.reload()  
-
-   function handleLogout(){
-    showModal("是否要退出登录？").then(res=>{
-    logout().finally(() => {
-        store.dispatch("logout")
-        //跳转回登录页
-        router.push("/login")
-        //提示退出登录成功
-        toast("退出登录成功")
-    })
-  })
-   }
-  
 
 </script>
 <style>

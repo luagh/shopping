@@ -1,13 +1,21 @@
 <template>
-    <div class="common-layout">
+   
     <el-container>
-      <el-aside width="200px"><FMenu/></el-aside>
+        <el-header>
+            <FHeader/>
+        </el-header>
+      
       <el-container>
-        <el-header><FHeader/></el-header>
-        <el-main><FTaglist/></el-main>
+        <el-aside width="200px">
+            <FMenu/>
+        </el-aside>
+        <el-main>
+            <FTaglist/>
+        <router-view></router-view>
+        </el-main>
       </el-container>
     </el-container>
-  </div>
+  
 </template>
 <script setup>
 import FHeader from './components/FHeader.vue'

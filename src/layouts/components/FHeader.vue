@@ -1,9 +1,21 @@
 <template>
     <div class="f-header">
-        <span class="logo">
-          <el-icon><eleme-filled /></el-icon>
-           后台管理
-        </span>
+        <el-dropdown class="dropdown" @command="handleCommand">
+        <span class="flex items-center text-light-50 ">
+       <el-avatar class="mr-2" size="25" :src="$store.state.user.avatar"/>
+       {{ $store.state.user.username}}
+       <el-icon class="el-icon--right">
+         <arrow-down />
+       </el-icon>
+       </span>
+        <template #dropdown>
+            <el-dropdown-menu >
+            <el-dropdown-item command="rePassword" >修改密码</el-dropdown-item>
+            <el-dropdown-item command="logout" @click="handleLogout">退出登录</el-dropdown-item>
+            </el-dropdown-menu>         
+        </template>
+     </el-dropdown>
+        
         <el-tooltip
           effect="dark"
           content="全屏"
@@ -20,25 +32,20 @@
           placement="bottom">
         <el-icon class="icon-btn" @click="handleRefresh"><refresh /></el-icon>
         </el-tooltip>
+        <div class="mx-auto flex items-center">
+      <el-tooltip effect="dark" content="GIN后台" placement="bottom">
+        <span class="logo flex items-center justify-center">
+          <el-icon class="mr-1"><eleme-filled /></el-icon>
+          后台管理
+        </span>
+      </el-tooltip>
+    </div>
        <div class="ml-auto flex items-center">
-        <el-icon class="icon-btn"><fold/>
+        <el-icon class="icon-btn" @click="$store.commit('handleAsideWidth')">
+            <Expand v-if="$store.state.asideWidth == '250px'"/>
+            <fold v-else />
         </el-icon>
-        
-     <el-dropdown class="dropdown" @command="handleCommand">
-        <span class="flex items-center text-light-50 ">
-       <el-avatar class="mr-2" size="25" :src="$store.state.user.avatar"/>
-       {{ $store.state.user.username}}
-       <el-icon class="el-icon--right">
-         <arrow-down />
-       </el-icon>
-       </span>
-        <template #dropdown>
-            <el-dropdown-menu >
-            <el-dropdown-item command="rePassword" >修改密码</el-dropdown-item>
-            <el-dropdown-item command="logout" @click="handleLogout">退出登录</el-dropdown-item>
-            </el-dropdown-menu>         
-        </template>
-     </el-dropdown>
+       
        </div>
        
     </div>
@@ -110,7 +117,7 @@ function handleRefresh() {
    height:64px;
 }
 .logo{
-    width:250px;
+    width:150px;
 @apply flex justify-center items-center text-xl font-thin;
 }
 .icon-btn{
@@ -118,6 +125,7 @@ function handleRefresh() {
        width:42px;
        height:64px;
        cursor:pointer;
+       position: relative;
 }
 .icon-btn:hover{
 @apply bg-indigo-600;
@@ -130,5 +138,8 @@ function handleRefresh() {
 .dialog-footer {
   display: flex;
   justify-content: center;
+}
+.mx-auto {
+  @apply mx-auto;
 }
 </style>

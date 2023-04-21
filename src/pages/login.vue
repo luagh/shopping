@@ -1,5 +1,5 @@
 <template>
-    <el-row style="min-height: 100vh;" class="bg-gray-10">
+    <el-row style="min-height: 100vh;" class="bg-gray-10 bg-image" >
         <el-col :span="24" class="flex items-center justify-center flex-col">
             <h2 class="font-bold text-3xl text-gray-800">欢迎您</h2>
             <div class="flex items-center justify-center my-5  text-gray-300 space-x-2">
@@ -92,4 +92,13 @@ onBeforeUnmount(()=>{
 
 </script>
 
-<style scoped></style>
+<style scoped>
+.bg-image{
+    background: url(../assets/logBg.png) no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+     background-size: cover;
+}
+
+</style>

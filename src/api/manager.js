@@ -7,3 +7,7 @@ export function login(username, password) {
         password
     })
 }
+
+export function getinfo() {
+    return axios.post("/admin/getinfo")
+}

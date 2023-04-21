@@ -8,10 +8,16 @@ import NotFound from '~/pages/404.vue'
 // 配置路由
 const routes = [{
     path: '/',
-    component: Index
+    component: Index,
+    meta: {
+        title: "后台首页"
+    }
 }, {
     path: '/login',
-    component: Login
+    component: Login,
+    meta: {
+        title: "登录页"
+    }
 }
     , { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound },
 ]

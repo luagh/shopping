@@ -1,25 +1,16 @@
 <template>
     <div class="f-tag-list" :style="{ right: $store.state.asideWidth }">
-        <el-tabs
-    v-model="activeTab"
-    type="card"
-    class="demo-tabs"
-    @tab-change="changeTab" 
-    @tab-remove="removeTab"
-  >
-    <el-tab-pane
-      v-for="item in tabList"
-      :key="item.path"
+        <el-tabs v-model="activeTab" type="card"  class="flex-1"
+        @tab-remove="removeTab"   @tab-change="changeTab" style="min-width:100px;" >
+    <el-tab-pane   :closable="item.path != '/'" v-for="item in tabList" :key="item.path"
       :label="item.title"
-      :name="item.path"
-      :closable="item.path != '/'"
-    > 
+      :name="item.path"> 
       {{ item.content }}
     </el-tab-pane>
   </el-tabs>
 
   <span class="tag-btn">
-    <el-dropdown>
+    <el-dropdown @command="handleClose">
     <span class="el-dropdown-link">
       <el-icon >
         <arrow-down />
@@ -27,11 +18,8 @@
     </span>
     <template #dropdown>
       <el-dropdown-menu>
-        <el-dropdown-item>Action 1</el-dropdown-item>
-        <el-dropdown-item>Action 2</el-dropdown-item>
-        <el-dropdown-item>Action 3</el-dropdown-item>
-        <el-dropdown-item disabled>Action 4</el-dropdown-item>
-        <el-dropdown-item divided>Action 5</el-dropdown-item>
+        <el-dropdown-item command="clearOther"> 关闭其他</el-dropdown-item>
+        <el-dropdown-item command="clearAll" >全部关闭</el-dropdown-item>
       </el-dropdown-menu>
     </template>
   </el-dropdown>
@@ -40,60 +28,14 @@
     <div style="height:44px;"></div>
 </template>
 <script setup>
-import { ref } from 'vue'
-import { useRoute ,onBeforeRouteUpdate} from 'vue-router'
-import { useCookies } from '@vueuse/integrations/useCookies'
-import { router } from '../../router';
-
-const cookie =useCookies()
-const route= useRoute()
-let tabIndex = 2
-const activeTab = ref(route.path)
-const tabList = ref([
-{
-    title: '后台首页',
-    path:'/',
-    
-  }, {
-    title: '商城管理',
-    path:'/goods/list'
-    
-  },
-  
-])
-
-//添加标签导航
-function addTab(tab){
- let noTab= tabList.value.findIndex( t =>t.path == tab.path) == -1
-if(noTab){
-    tabList.value.push(tab)
-}
-cookie.set("tabList",tabList.value)
-}
-//初始化标签导航列表
-function initTabList(){
-let tbs =cookie.get("tabList")
-if(tbs){
-tabList.value =tbs
-}
-}
-initTabList()
-
-onBeforeRouteUpdate( (to,from) => {
-activeTab.value=true
-    addTab({
-        title:to.meta.title,
-        path:to.path
-})
-       
-})
-const changeTab = (t) => {
-    activeTab.value=true
-    router.push(t)
-}
-const removeTab = (targetName) => {
-
-}
+import { useTabList} from "~/composables/useTabList.js"
+const{
+    activeTab,
+        tabList,
+        changeTab,
+        removeTab,
+        handleClose
+}=useTabList()
 </script>
 <style>
 

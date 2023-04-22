@@ -17,4 +17,6 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component)
 }
 
+import permission from '~/directives/permission.js'
+app.use(permission)
 app.mount('#app')

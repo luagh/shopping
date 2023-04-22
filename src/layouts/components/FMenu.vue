@@ -1,5 +1,5 @@
 <template>
-    <div class="f-menu" >
+    <div class="f-menu" :style="{ width: menuWidth }">
         <el-menu :default-active="defaultActive" unique-opened :collapse="isCollapse" 
         default-active="2"  @select="handleSelect" :collapse-transition="false">
         <template v-for="(item,index) in asideMenus " :key="index">
@@ -37,7 +37,7 @@ const route = useRoute()
 const defaultActive=ref(route.path)
 //是否折叠
 const isCollapse =computed(()=>!(store.state.asideWidth == '250px'))
-
+const menuWidth = computed(() => store.state.asideWidth === '250px' ? '250px' : '64px')
 const asideMenus=computed(()=>store.state.menus)
 const handleSelect = (e) => {
     router.push(e)

@@ -8,7 +8,7 @@
                  <FTaglist/>
                  <router-view></router-view>
              </el-main>
-             <el-aside order="2" style="flex-grow: 0; flex-shrink: 0; flex-basis: 200px;">
+             <el-aside order="2" style="flex-grow: 0; flex-shrink: 0; flex-basis: 250px;">
                  <FMenu/>
              </el-aside>
          </el-container>

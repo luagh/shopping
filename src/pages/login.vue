@@ -94,7 +94,7 @@ onBeforeUnmount(()=>{
 
 <style scoped>
 .bg-image{
-    background: url(../assets/logBg.png) no-repeat center center fixed;
+    background: url(../assets/login.jpg) no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;

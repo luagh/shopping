@@ -1,0 +1,35 @@
+<template>
+    <el-main class="image-main">
+        <div class="top">
+            <div v-for="i in 100" :key="i">{{ i }}</div>
+        </div>
+        <div class="bottom">fengye</div>
+
+    </el-main>
+</template>
+<script setup></script>
+<style>
+.image-main {
+    position: relative;
+}
+
+
+.image-main .top {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 50px;
+    overflow-y: auto;
+
+}
+
+
+.image-main .bottom {
+    position: absolute;
+    bottom: 0;
+    height: 50px;
+    left: 0;
+    right: 0;
+    @apply flex items-center justify-center;
+}
+</style>

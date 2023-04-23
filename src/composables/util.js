@@ -1,7 +1,7 @@
 import { ElMessage, ElMessageBox } from 'element-plus'
 import nprogress from 'nprogress'
 //成功提示
-export function toast(message, type = "success", dangerouslyUseHTMLString = false) {
+export function toast(message, type = "success", dangerouslyUseHTMLString = true) {
     ElMessage({
         message,
         type,

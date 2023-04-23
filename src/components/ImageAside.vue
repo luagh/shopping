@@ -1,7 +1,8 @@
 <template>
     <el-aside width="200px" class="image-aside" v-loading="loading">
         <div class="top">
-            <AsideList :active="activeId == item.id" v-for="(item, index) in list" :key="index" @edit="handleEdit(item)">
+            <AsideList :active="activeId == item.id" @delete="handleDelete(item.id)" v-for="(item, index) in list"
+                :key="index" @edit="handleEdit(item)">
                 {{ item.name }}
             </AsideList>
         </div>
@@ -26,7 +27,7 @@
 <script setup>
 import { ref, reactive, computed } from 'vue';
 import AsideList from './AsideList.vue';
-import { getImageClassList, createImageClass, updateImageClass } from '~/api/image_class.js';
+import { getImageClassList, createImageClass, updateImageClass, deleteImageClass } from '~/api/image_class.js';
 import FormDrawer from "./FormDrawer.vue"
 import { toast } from '~/composables/util.js'
 //加载动画
@@ -107,6 +108,22 @@ const handleEdit = (row) => {
     form.order = row.order
     formDrawerRef.value.open()
 }
+// 删除
+const handleDelete = (id) => {
+    loading.value = true
+    deleteImageClass(id)
+
+
+    deleteImageClass(id)
+        .then(res => {
+            toast('删除成功')
+            getData()
+        }).finally(() => {
+            loading.value = false
+
+        })
+}
+
 // 暴露出去
 defineExpose({
     handleCreate

@@ -12,3 +12,7 @@ export function createImageClass(data) {
 export function updateImageClass(id, data) {
     return axios.post("/admin/image_class/" + id, data)
 }
+// 删除图库分类
+export function deleteImageClass(id) {
+    return axios.post(`/admin/image_class/${id}/delete`)
+}

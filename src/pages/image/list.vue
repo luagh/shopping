@@ -29,6 +29,9 @@ const handleAsideChange = (image_class_id) => {
     ImageMainRef.value.loadData(image_class_id)
 }
 
+const handleOpenUpload = () => {
+    ImageMainRef.value.openUploadFile()
+}
 
 
 </script>

@@ -2,7 +2,7 @@
     <el-aside width="200px" class="image-aside" v-loading="loading">
         <div class="top">
             <AsideList :active="activeId == item.id" @delete="handleDelete(item.id)" v-for="(item, index) in list"
-                :key="index" @edit="handleEdit(item)">
+                :key="index" @edit="handleEdit(item)" @click="handleChangeActiveId(item.id)">
                 {{ item.name }}
             </AsideList>
         </div>
@@ -33,7 +33,7 @@ import { toast } from '~/composables/util.js'
 //加载动画
 const loading = ref(false)
 const list = ref([])
-const activeId = ref(0)
+
 
 //分页
 const currentPage = ref(1)
@@ -54,8 +54,7 @@ function getData(p = null) {
             list.value = res.list
             let item = list.value[0]
             if (item) {
-                activeId.value = item.id
-                // handleChangeActiveId(item.id)
+                handleChangeActiveId(item.id)
             }
 
         }).finally(() => {
@@ -123,6 +122,17 @@ const handleDelete = (id) => {
 
         })
 }
+//选中图库分类id
+
+const activeId = ref(0)
+const emit = defineEmits(['change'])
+//切换分类
+function handleChangeActiveId(id) {
+    activeId.value = id
+    emit('change', id)
+}
+
+
 
 // 暴露出去
 defineExpose({

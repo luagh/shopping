@@ -49,6 +49,7 @@ import { ref, reactive, computed } from "vue"
 import { getNoticeList, createNotice, updateNotice, deleteNotice } from "~/api/notice.js"
 import FormDrawer from "~/components/FormDrawer.vue";
 import { toast } from "~/composables/util.js"
+import { useInitTable, useInitForm } from '~/composables/useCommon.js'
 
 const tableData = ref([])
 const loading = ref(false)

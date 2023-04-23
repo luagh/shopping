@@ -29,7 +29,7 @@
       </el-icon>
     </el-tooltip>
     <div class="mx-auto flex items-center">
-      <el-tooltip effect="dark" content="GIN后台" placement="bottom">
+      <el-tooltip effect="dark" content="后台管理" placement="bottom">
         <span class="logo flex items-center justify-center">
           <el-icon class="mr-1"><eleme-filled /></el-icon>
           后台管理

@@ -17,7 +17,7 @@
             <el-table-column prop="create_time" label="发布时间" width="380" />
             <el-table-column label="操作" width="180px" align="center">
                 <template #default="scope">
-                    <el-button type="primary" size="small" text>修改</el-button>
+                    <el-button type="primary" size="small" text @click="handleEdit(scope.row)">修改</el-button>
                     <el-popconfirm title="是否要删除" confirmbuttontext="确认" cancelbuttontext="取消"
                         @confirm="handleDelete(scope.row.id)">
                         <template #reference>
@@ -45,18 +45,22 @@
     </el-card>
 </template>
 <script setup>
-import { ref, reactive } from "vue"
-import { getNoticeList, createNotice } from "~/api/notice.js"
+import { ref, reactive, computed } from "vue"
+import { getNoticeList, createNotice, updateNotice, deleteNotice } from "~/api/notice.js"
 import FormDrawer from "~/components/FormDrawer.vue";
 import { toast } from "~/composables/util.js"
 
 const tableData = ref([])
 const loading = ref(false)
+
 //分页
 const currentPage = ref(1)
 const total = ref(0)
 const limit = ref(10)
 
+// 区别新增和修改
+const editId = ref(0)
+const drawerTitle = computed(() => editId.value ? "修改" : "新增")
 //获取数据
 function getData(p = null) {
     if (typeof p == 'number') {
@@ -71,6 +75,17 @@ function getData(p = null) {
             loading.value = false
         })
 }
+//删除
+const handleDelete = (id) => {
+    loading.value = true
+    deleteNotice(id).then(res => {
+        toast("删除成功")
+        getData()
+    }).finally(() => {
+        loading.value = false
+    })
+}
+
 //表单部分
 const formDrawerRef = ref(null)
 const formRef = ref(null)
@@ -87,12 +102,14 @@ const handleSubmit = () => {
     formRef.value.validate((valid) => {
         if (!valid) return
         formDrawerRef.value.showLoading()
-        createNotice(form)
-            .then(res => {
-                toast("新增成功")
-                formDrawerRef.value.close()
-                getData()
-            })
+        const fun = editId.value ? updateNotice(editId.value, form) : createNotice(form)
+
+        fun.then(res => {
+            toast(drawerTitle.value + "成功")
+            //修改刷新当前页
+            getData(editId.value ? false : 1)
+            formDrawerRef.value.close()
+        })
             .finally(() => {
                 formDrawerRef.value.hideLoading()
             })
@@ -100,8 +117,30 @@ const handleSubmit = () => {
 
     )
 }
+
+//重置表单
+function resetForm(row = false) {
+    if (formRef.value) formRef.value.clearValidate()
+    if (row) {
+        for (const key in form) {
+            form[key] = row[key]
+        }
+    }
+}
+
 //新增
 const handlecreate = () => {
+    editId.value = 0
+    resetForm({
+        title: '',
+        content: ''
+    })
+    formDrawerRef.value.open()
+}
+// 编辑
+const handleEdit = (row) => {
+    editId.value = row.id
+    resetForm()
     formDrawerRef.value.open()
 }
 

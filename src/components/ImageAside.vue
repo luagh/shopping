@@ -1,7 +1,7 @@
 <template>
     <el-aside width="200px" class="image-aside" v-loading="loading">
         <div class="top">
-            <AsideList :active="activeId == item.id" v-for="(item, index) in list" :key="index">
+            <AsideList :active="activeId == item.id" v-for="(item, index) in list" :key="index" @edit="handleEdit(item)">
                 {{ item.name }}
             </AsideList>
         </div>
@@ -26,7 +26,7 @@
 <script setup>
 import { ref, reactive, computed } from 'vue';
 import AsideList from './AsideList.vue';
-import { getImageClassList, createImageClass } from '~/api/image_class.js';
+import { getImageClassList, createImageClass, updateImageClass } from '~/api/image_class.js';
 import FormDrawer from "./FormDrawer.vue"
 import { toast } from '~/composables/util.js'
 //加载动画
@@ -39,6 +39,8 @@ const currentPage = ref(1)
 const total = ref(0)
 const limit = ref(10)
 
+const editId = ref(0)
+const drawerTitle = computed(() => editId.value ? "修改" : "新增")
 //获取数据
 function getData(p = null) {
     if (typeof p == 'number') {
@@ -63,8 +65,13 @@ function getData(p = null) {
 getData()
 
 const formDrawerRef = ref(null)
-const handleCreate = () => formDrawerRef.value.open()
+const handleCreate = () => {
+    editId.value = 0
+    form.name = ''
+    form.order = 50
+    formDrawerRef.value.open()
 
+}
 
 const form = reactive({
     name: "",
@@ -81,19 +88,25 @@ const handleSubmit = () => {
         if (!valid) return
 
         formDrawerRef.value.showLoading()
-        createImageClass(form)
-            .then(res => {
-                toast('新增成功')
-                getData(1)
-                formDrawerRef.value.close()
-            })
+        const fun = editId.value ? updateImageClass(editId.value, form) : createImageClass(form)
+        fun.then(res => {
+            toast(drawerTitle.value + '成功')
+            getData(editId.value ? currentPage.value : 1)
+            formDrawerRef.value.close()
+        })
             .finally(() => {
                 formDrawerRef.value.hideLoading()
             })
 
     })
 }
-
+// 编辑
+const handleEdit = (row) => {
+    editId.value = row.id
+    form.name = row.name
+    form.order = row.order
+    formDrawerRef.value.open()
+}
 // 暴露出去
 defineExpose({
     handleCreate

@@ -46,20 +46,24 @@ png" />
             </el-table-column>
             <el-table-column label="状态" width="120">
                 <template #default="{ row }">
-                    <el-switch :modelValue="row.status" :active-value="1" inactive-value="0">
+                    <el-switch :modelValue="row.status" :active-value="1" inactive-value="0" :loading="row.statusLoading"
+                        :disabled="row.super == 1" @change="handleStatuschange($event, row)">
                     </el-switch>
                 </template>
             </el-table-column>
             <el-table-column label="操作" width="180px" align="center">
                 <template #default="scope">
-                    <el-button type="primary" size="small" text @click="handleEdit(scope.row)">修改</el-button>
-                    <el-popconfirm title="是否要删除" confirmbuttontext="确认" cancelbuttontext="取消"
-                        @confirm="handleDelete(scope.row.id)">
-                        <template #reference>
-                            <el-button text type="primary" size="small">删除
-                            </el-button>
-                        </template>
-                    </el-popconfirm>
+                    <small v-if="scope.row.super == 1" class="text-sm☐text-gray-500">暂无操作</small>
+                    <div v-else>
+                        <el-button type="primary" size="small" text @click="handleEdit(scope.row)">修改</el-button>
+                        <el-popconfirm title="是否要删除" confirmbuttontext="确认" cancelbuttontext="取消"
+                            @confirm="handleDelete(scope.row.id)">
+                            <template #reference>
+                                <el-button text type="primary" size="small">删除
+                                </el-button>
+                            </template>
+                        </el-popconfirm>
+                    </div>
                 </template>
             </el-table-column>
         </el-table>
@@ -85,7 +89,7 @@ import { ref, reactive, computed } from "vue"
 import { getNoticeList, createNotice, updateNotice, deleteNotice } from "~/api/notice.js"
 import FormDrawer from "~/components/FormDrawer.vue";
 import { toast } from "~/composables/util.js"
-import { getManagerList, } from "~/api/manager.js"
+import { getManagerList, updateManagerStatus, } from "~/api/manager.js"
 
 
 const searchForm = reactive({
@@ -114,7 +118,10 @@ function getData(p = null) {
     loading.value = true
     getManagerList(currentPage.value, searchForm)
         .then(res => {
-            tableData.value = res.list
+            tableData.value = res.list.map(o => {
+                o.statusLoading = false
+                return o
+            })
             total.value = res.totalCount
         }).finally(() => {
             loading.value = false
@@ -187,6 +194,18 @@ const handleEdit = (row) => {
     editId.value = row.id
     resetForm()
     formDrawerRef.value.open()
+}
+//修改状态
+const handleStatuschange = (status, row) => {
+    row.statusLoading = true
+    updateManagerStatus(row.id, status)
+        .then(res => {
+            toast("修改状态成功")
+            row.status = status
+        })
+        .finally(() => {
+            row.statusLoading = false
+        })
 }
 
 

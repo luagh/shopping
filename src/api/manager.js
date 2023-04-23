@@ -19,6 +19,7 @@ export function updatepassword(data) {
     return axios.post("/admin/updatepassword", data)
 }
 
+// 管理员列表 
 export function getManagerList(page, query = {
 
 }) {
@@ -32,4 +33,11 @@ export function getManagerList(page, query = {
     r = r ? ("?" + r) : ""
 
     return axios.get(`/admin/manager/${page}${r}`)
+}
+
+// 修改管理员状态
+export function updateManagerStatus(id, status) {
+    return axios.post(`/admin/manager/${id}/update_status`, {
+        status
+    })
 }

@@ -5,7 +5,7 @@
             <el-button type="primary" size="small" @click="handleOpenUpload">上传图片</el-button>
         </el-header>
         <el-container>
-            <ImageAside />
+            <ImageAside ref="ImageAsideRef" />
 
             <ImageMain />
         </el-container>
@@ -13,6 +13,7 @@
 </template>
  
 <script setup>
+import { ref } from "vue"
 import ImageAside from '~/components/ImageAside.vue'
 import ImageMain from '~/components/ImageMain.vue'
 
@@ -21,7 +22,8 @@ import ImageMain from '~/components/ImageMain.vue'
 const windowHeight = window.innerHeight || document.body.clientHeight
 const h = windowHeight - 64 - 44 - 40
 
-
+const ImageAsideRef = ref(null)
+const handleOpenCreate = () => ImageAsideRef.value.handleCreate()
 </script>
  
 <style>

@@ -9,8 +9,9 @@
                             :initial-index="0"></el-image>
                         <div class="image-title">{{ item.name }}</div>
                         <div class="flex items-center justify-center p-2">
-                            <el-checkbox v-if="openChoose" v-model="item.checked"
-                                @change="handleChooseChange(item)"></el-checkbox>
+
+                            <el-checkbox v-model="item.checked" @change="handleChooseChange(item)">
+                            </el-checkbox>
                             <el-button type="primary" size="small" text @click="handleEdit(item)">重命名</el-button>
                             <el-popconfirm title="是否要删除该图片" confirm-button-text="确认" cancel-button-text="取消"
                                 @confirm="handleDelete(item.id)">
@@ -40,7 +41,7 @@
 </template>
 <script setup>
 import { getImageList, updateImage, deleteImage } from '~/api/image.js';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { showPrompt, toast } from "~/composables/util.js"
 import UploadFile from "./UploadFile.vue"
 
@@ -65,7 +66,10 @@ function getData(p = null) {
     getImageList(image_class_id.value, currentPage.value)
         .then(res => {
             total.value = res.totalCount
-            list.value = res.list
+            list.value = res.list.map(o => {
+                o.checked = false
+                return o
+            })
 
 
         }).finally(() => {
@@ -109,6 +113,18 @@ const handleDelete = (id) => {
 //上传成功
 const handleUploadSuccess = () => getData(1)
 
+
+//选中的图片
+const emit = defineEmits(["choose"])
+const checkedImage = computed(() => list.value.filter(o => o.checked))
+
+const handleChooseChange = (item) => {
+    if (item.checked && checkedImage.value.length > 1) {
+        item.checked = false
+        return toast(`最多只能选中1张`, "error")
+    }
+    emit("choose", checkedImage.value)
+}
 
 defineExpose({
     loadData,

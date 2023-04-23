@@ -80,7 +80,7 @@ png" />
                     <el-input v-model="form.password" placeholder="密码"></el-input>
                 </el-form-item>
                 <el-form-item label="头像" prop="avatar">
-                    <el-input v-model="form.avatar" placeholder="头像"></el-input>
+                    <ChooseImage v-model="form.avatar" />
                 </el-form-item>
                 <el-form-item label="所属角色" prop="role_id">
                     <el-select v-model="form.role_id" placeholder="所属角色">
@@ -100,6 +100,7 @@ png" />
 
 import { ref, reactive, computed } from "vue"
 import FormDrawer from "~/components/FormDrawer.vue";
+import ChooseImage from "~/components/Chooselmage.vue";
 import { toast } from "~/composables/util.js"
 import { getManagerList, updateManagerStatus, createManager, updateManager, deleteManager } from "~/api/manager.js"
 

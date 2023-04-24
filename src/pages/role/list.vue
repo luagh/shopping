@@ -58,16 +58,18 @@
         <!-- <!-·权限配置-> -->
         <FormDrawer ref="setRuleFormDrawerRef" title="权限配置" @submit="handleSetRuleSubmit">
             <el-tree-v2 ref="elTreeRef" node-key="id" :default-expanded-keys="defaultExpandedKeys" :data="ruleList"
-                :props="{ label: 'name', children: 'child' }" show-checkbox :height="treeHeight" />
+                :check-strictly="checkStrictly" @check="handleTreeCheck" :props="{ label: 'name', children: 'child' }"
+                show-checkbox :height="treeHeight" />
         </FormDrawer>
     </el-card>
 </template>
 <script setup>
-import { getRoleList, createRole, updateRole, deleteRole, updateRoleStatus } from "~/api/role.js"
+import { getRoleList, createRole, updateRole, deleteRole, updateRoleStatus, setRoleRules } from "~/api/role.js"
 import FormDrawer from "~/components/FormDrawer.vue";
 import { useInitTable, useInitForm } from '~/composables/useCommon.js'
 import { ref } from "vue"
 import { getRuleList } from "~/api/rule.js"
+import { toast } from "~/composables/util.js"
 const {
     tableData,
     loading,
@@ -109,12 +111,14 @@ const setRuleFormDrawerRef = ref(null)
 const ruleList = ref([])
 const ruleIds = ref([]) //当前角色拥有的权限ID
 const defaultExpandedKeys = ref([])
+const checkStrictly = ref(false)
 const treeHeight = ref(0)
 const roleId = ref(0)
 const elTreeRef = ref(null)
 const openSetRule = (row) => {
     roleId.value = row.id
     treeHeight.value = window.innerHeight - 170
+    checkStrictly.value = true
     getRuleList(1).then(res => {
         ruleList.value = res.list
         defaultExpandedKeys.value = res.list.map(o => o.id)//默认展开一级菜单
@@ -125,13 +129,27 @@ const openSetRule = (row) => {
         ruleIds.value = row.rules.map(o => o.id)
         setTimeout(() => {
             elTreeRef.value.setCheckedKeys(ruleIds.value)
+            checkStrictly.value = false
         }, 150);
 
     })
 }
 
 const handleSetRuleSubmit = () => {
+    setRuleFormDrawerRef.value.showLoading()
+    setRoleRules(roleId.value, ruleIds.value)
+        .then(res => {
+            toast("配置成功")
+            getData()
+            setRuleFormDrawerRef.value.close()
+        }).finally(() => {
+            setRuleFormDrawerRef.value.hideLoading()
+        })
+}
 
+const handleTreeCheck = (...e) => {
+    const { checkedKeys, halfCheckedKeys } = e[1]
+    ruleIds.value = [...checkedKeys, ...halfCheckedKeys]
 }
 
 </script>

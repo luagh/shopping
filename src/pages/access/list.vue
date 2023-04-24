@@ -12,7 +12,7 @@
                     <span>{{ data.name }}</span>
                     <div class="ml-auto">
                         <el-switch :modelValue="data.status" :active-value="1" inactive-value="0"
-                            @change="handleStatusChange(Sevent, data)" />
+                            @change="handleStatusChange($event, data)" />
                         <el-button text type="primary" size="small" @click.stop="handleEdit(data)">修改</el-button>
 
                         <el-popconfirm title="是否要删除" confirmbuttontext="确认" cancelbuttontext="取消"

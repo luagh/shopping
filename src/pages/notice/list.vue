@@ -45,107 +45,44 @@
     </el-card>
 </template>
 <script setup>
-import { ref, reactive, computed } from "vue"
 import { getNoticeList, createNotice, updateNotice, deleteNotice } from "~/api/notice.js"
 import FormDrawer from "~/components/FormDrawer.vue";
-import { toast } from "~/composables/util.js"
 import { useInitTable, useInitForm } from '~/composables/useCommon.js'
 
-const tableData = ref([])
-const loading = ref(false)
-
-//分页
-const currentPage = ref(1)
-const total = ref(0)
-const limit = ref(10)
-
-// 区别新增和修改
-const editId = ref(0)
-const drawerTitle = computed(() => editId.value ? "修改" : "新增")
-//获取数据
-function getData(p = null) {
-    if (typeof p == 'number') {
-        currentPage.value = p
-    }
-    loading.value = true
-    getNoticeList(currentPage.value)
-        .then(res => {
-            tableData.value = res.list
-            total.value = res.totalCount
-        }).finally(() => {
-            loading.value = false
-        })
-}
-//删除
-const handleDelete = (id) => {
-    loading.value = true
-    deleteNotice(id).then(res => {
-        toast("删除成功")
-        getData()
-    }).finally(() => {
-        loading.value = false
-    })
-}
-
-//表单部分
-const formDrawerRef = ref(null)
-const formRef = ref(null)
-const form = reactive({
-    title: '',
-    content: ''
+const {
+    tableData,
+    loading,
+    currentPage,
+    total,
+    limit,
+    getData,
+    handleDelete
+} = useInitTable({
+    getList: getNoticeList,
+    delete: deleteNotice
 })
-const rules = {
-    title: [{ required: true, message: '公告标题不能为空', trigger: 'blur' }],
-    content: [{ required: true, message: '公告内容不能为空', trigger: 'blur' }]
-}
 
-const handleSubmit = () => {
-    formRef.value.validate((valid) => {
-        if (!valid) return
-        formDrawerRef.value.showLoading()
-        const fun = editId.value ? updateNotice(editId.value, form) : createNotice(form)
 
-        fun.then(res => {
-            toast(drawerTitle.value + "成功")
-            //修改刷新当前页
-            getData(editId.value ? false : 1)
-            formDrawerRef.value.close()
-        })
-            .finally(() => {
-                formDrawerRef.value.hideLoading()
-            })
-    }
-
-    )
-}
-
-//重置表单
-function resetForm(row = false) {
-    if (formRef.value) formRef.value.clearValidate()
-    if (row) {
-        for (const key in form) {
-            form[key] = row[key]
-        }
-    }
-}
-
-//新增
-const handlecreate = () => {
-    editId.value = 0
-    resetForm({
-        title: '',
-        content: ''
+const {
+    formDrawerRef,
+    formRef,
+    form,
+    rules,
+    drawerTitle,
+    handleSubmit,
+    handlecreate,
+    handleEdit } = useInitForm({
+        form: {
+            title: '',
+            content: ''
+        },
+        rules: {
+            title: [{ required: true, message: '公告标题不能为空', trigger: 'blur' },],
+            content: [{ required: true, message: '公告内容不能为空', trigger: 'blur' },]
+        },
+        getData,
+        update: updateNotice,
+        create: createNotice
     })
-    formDrawerRef.value.open()
-}
-// 编辑
-const handleEdit = (row) => {
-    editId.value = row.id
-    resetForm()
-    formDrawerRef.value.open()
-}
-
-
-getData()
 </script>
 <style></style>

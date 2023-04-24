@@ -147,6 +147,14 @@ const asyncRoutes = [{
         title: "规格管理"
     }
 },
+{
+    path: "/level/list",
+    name: "/level/list",
+    component: SkusList,
+    meta: {
+        title: "会员等级"
+    }
+},
 ]
 
 export const router = createRouter({

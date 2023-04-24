@@ -22,8 +22,9 @@
                     </el-switch>
                 </template>
             </el-table-column>
-            <el-table-column label="操作" width="180px" align="center">
+            <el-table-column label="操作" width="250px" align="center">
                 <template #default="scope">
+                    <el-button type="primary" size="small" text @click="openSetRule(scope.row)">配置权限</el-button>
                     <el-button type="primary" size="small" text @click="handleEdit(scope.row)">修改</el-button>
                     <el-popconfirm title="是否要删除" confirmbuttontext="确认" cancelbuttontext="取消"
                         @confirm="handleDelete(scope.row.id)">
@@ -53,13 +54,20 @@
                 </el-form-item>
             </el-form>
         </FormDrawer>
+
+        <!-- <!-·权限配置-> -->
+        <FormDrawer ref="setRuleFormDrawerRef" title="权限配置" @submit="handleSetRuleSubmit">
+            <el-tree-v2 ref="elTreeRef" node-key="id" :default-expanded-keys="defaultExpandedKeys" :data="ruleList"
+                :props="{ label: 'name', children: 'child' }" show-checkbox :height="treeHeight" />
+        </FormDrawer>
     </el-card>
 </template>
 <script setup>
 import { getRoleList, createRole, updateRole, deleteRole, updateRoleStatus } from "~/api/role.js"
 import FormDrawer from "~/components/FormDrawer.vue";
 import { useInitTable, useInitForm } from '~/composables/useCommon.js'
-
+import { ref } from "vue"
+import { getRuleList } from "~/api/rule.js"
 const {
     tableData,
     loading,
@@ -96,5 +104,35 @@ const {
         update: updateRole,
         create: createRole
     })
+
+const setRuleFormDrawerRef = ref(null)
+const ruleList = ref([])
+const ruleIds = ref([]) //当前角色拥有的权限ID
+const defaultExpandedKeys = ref([])
+const treeHeight = ref(0)
+const roleId = ref(0)
+const elTreeRef = ref(null)
+const openSetRule = (row) => {
+    roleId.value = row.id
+    treeHeight.value = window.innerHeight - 170
+    getRuleList(1).then(res => {
+        ruleList.value = res.list
+        defaultExpandedKeys.value = res.list.map(o => o.id)//默认展开一级菜单
+        // 打开弹窗
+        setRuleFormDrawerRef.value.open()
+
+        //当前角色拥有的权限ID
+        ruleIds.value = row.rules.map(o => o.id)
+        setTimeout(() => {
+            elTreeRef.value.setCheckedKeys(ruleIds.value)
+        }, 150);
+
+    })
+}
+
+const handleSetRuleSubmit = () => {
+
+}
+
 </script>
 <style></style>

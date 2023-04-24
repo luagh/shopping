@@ -1,18 +1,12 @@
 <template>
     <el-card shadow="never">
         <!-- 新增|刷新 -->
-        <div class="flex items-center justify-between mb-4">
-            <el-button type="primary" size="small" @click="handlecreate">新增</el-button>
-            <el-tooltip effect="dark" content="刷新数据" placement="top">
-                <el-button text @click="getData">
-                    <el-icon size="20">
-                        <Refresh />
-                    </el-icon>
-                </el-button>
-            </el-tooltip>
-        </div>
+        <ListHeader layout="create,delete,refresh" @create="handlecreate" @refresh="getData" @delete="handleMultiDelete">
+        </ListHeader>
 
-        <el-table :data="tableData" stripe style="width: 100%" v-loading="loading">
+        <el-table ref="multipleTableRef" @selection-change="handleSelectionChange" :data="tableData" stripe
+            style="width: 100%" v-loading="loading">
+            <el-table-column type="selection" width="55" />
             <el-table-column prop="name" label="规格名称" />
             <el-table-column prop="default" label="规格值" />
             <el-table-column prop="order" label="排序" />
@@ -40,12 +34,12 @@
             <el-pagination :pager-count="11" layout="prev,pager, next" :total="total" :current-page="currentPage"
                 :page-size="limit" @current-change="getData" />
         </div>
-        <FormDrawer ref="formDrawerRef" :title="drawerTitle" @submit="handleSubmit">
+        <FormDrawer destroyOnClose ref="formDrawerRef" :title="drawerTitle" @submit="handleSubmit">
             <el-form :model="form" ref="formRef" :rules="rules" label-width="80px" :inline="false">
                 <el-form-item label="规格名称" prop="name">
                     <el-input v-model="form.name" placeholder="规格名称"></el-input>
                 </el-form-item>
-                <el-form-item label="配许" prop="order">
+                <el-form-item label="排序" prop="order">
                     <el-input-number v-model="form.order" :min="0" :max="1000">
                     </el-input-number>
                 </el-form-item>
@@ -71,7 +65,8 @@ import {
 import FormDrawer from "~/components/FormDrawer.vue";
 import { useInitTable, useInitForm } from '~/composables/useCommon.js'
 import { ref } from "vue"
-
+import TagInput from "~/components/TagInput.vue";
+import ListHeader from "~/components/ListHeader.vue";
 import { toast } from "~/composables/util.js"
 const {
     tableData,
@@ -112,10 +107,28 @@ const {
         create: createSkus
     })
 
-const handleTreeCheck = (...e) => {
-    const { checkedKeys, halfCheckedKeys } = e[1]
-    ruleIds.value = [...checkedKeys, ...halfCheckedKeys]
+//多选选中ID
+const multiselectionIds = ref([])
+const handleSelectionChange = (e) => {
+    multiselectionIds.value = e.map(o => o.id)
 }
+// 批量删除
+const multipleTableRef = ref(null)
+const handleMultiDelete = () => {
+    loading.value = true
+    deleteSkus(multiselectionIds.value)
+        .then(res => {
+            toast("删除成功")
+            //清空选中
+            if (multipleTableRef.value) {
+                multipleTableRef.value.clearSelection()
+            }
+            getData()
+        })
+        .finally(() => {
+            loading.value = false
+        })
 
+}
 </script>
 <style></style>

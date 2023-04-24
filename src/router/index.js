@@ -17,6 +17,7 @@ import SettingBase from '~/pages/setting/base.vue'
 import CouponList from '~/pages/coupon/list.vue'
 import ManagerList from '~/pages/manager/list.vue'
 import AccessList from '~/pages/access/list.vue'
+import RoleList from '~/pages/role/list.vue'
 
 // 配置路由
 
@@ -128,7 +129,15 @@ const asyncRoutes = [{
     meta: {
         title: "菜单权限管理"
     }
-}
+},
+{
+    path: "/role/list",
+    name: "/role/list",
+    component: RoleList,
+    meta: {
+        title: "角色管理"
+    }
+},
 ]
 
 export const router = createRouter({

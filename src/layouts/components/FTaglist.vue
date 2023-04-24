@@ -46,7 +46,7 @@ const {
 }
 
 .tag-btn {
-  @apply bg-white rounded ml-auto flex items-center justify-center px-2;
+  @apply rounded ml-auto flex items-center justify-center px-2;
   height: 32px;
 }
 
@@ -75,4 +75,5 @@ const {
 :deep(.is-disabled) {
   cursor: not-allowed;
   @apply text-gray-300;
-}</style>
+}
+</style>

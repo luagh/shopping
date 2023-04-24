@@ -11,10 +11,17 @@
                     </el-icon>
                     <span>{{ data.name }}</span>
                     <div class="ml-auto">
-                        <el-switch :modelValue="data.status" :active-value="1" inactive-value="0" />
+                        <el-switch :modelValue="data.status" :active-value="1" inactive-value="0"
+                            @change="handleStatusChange(Sevent, data)" />
                         <el-button text type="primary" size="small" @click.stop="handleEdit(data)">修改</el-button>
 
-                        <el-button text type="primary" size="small">删除</el-button>
+                        <el-popconfirm title="是否要删除" confirmbuttontext="确认" cancelbuttontext="取消"
+                            @confirm="handleDelete(data.id)">
+                            <template #reference>
+                                <el-button text type="primary" size="small">删除
+                                </el-button>
+                            </template>
+                        </el-popconfirm>
                     </div>
                 </div>
             </template>
@@ -59,7 +66,7 @@
 </template>
 <script setup>
 import { useInitTable, useInitForm } from "~/composables/useCommon.js"
-import { getRuleList, createRule, updateRule } from "~/api/rule.js";
+import { getRuleList, createRule, updateRule, updateRuleStatus, deleteRule } from "~/api/rule.js";
 import { ref } from "vue";
 import FormDrawer from "~/components/FormDrawer.vue";
 import ListHeader from "~/components/ListHeader.vue";
@@ -70,14 +77,18 @@ const options = ref([])
 const {
     loading,
     tableData,
-    getData
+    getData,
+    handleDelete,
+    handlestatusChange
 } = useInitTable({
     getList: getRuleList,
     onGetListSuccess: (res) => {
         options.value = res.rules
         tableData.value = res.list
         defaultExpandedKeys.value = res.list.map(o => o.id)
-    }
+    },
+    delete: deleteRule,
+    updateStatus: updateRuleStatus
 })
 
 

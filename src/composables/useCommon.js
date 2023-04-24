@@ -12,74 +12,74 @@ export function useInitTable(opt = {}) {
             }
             getData()
         }
+    }
 
+    const tableData = ref([])
+    const loading = ref(false)
 
-        const tableData = ref([])
-        const loading = ref(false)
+    //分页
+    const currentPage = ref(1)
+    const total = ref(0)
+    const limit = ref(10)
 
-        //分页
-        const currentPage = ref(1)
-        const total = ref(0)
-        const limit = ref(10)
-
-        //获取数据
-        function getData(p = null) {
-            if (typeof p == 'number') {
-                currentPage.value = p
-            }
-            loading.value = true
-            opt.getList(currentPage.value, searchForm)
-                .then(res => {
-                    if (opt.onGetListSuccess && typeof opt.onGetListSuccess == "function") {
-                        opt.onGetListSuccess(res)
-                    } else {
-                        tableData.value = res.list
-                        total.value = res.totalCount
-                    }
-                }).finally(() => {
-                    loading.value = false
-                })
+    //获取数据
+    function getData(p = null) {
+        if (typeof p == 'number') {
+            currentPage.value = p
         }
-        getData()
-
-
-        //删除
-        const handleDelete = (id) => {
-            loading.value = true
-            opt.delete(id).then(res => {
-                toast("删除成功")
-                getData()
+        loading.value = true
+        opt.getList(currentPage.value, searchForm)
+            .then(res => {
+                if (opt.onGetListSuccess && typeof opt.onGetListSuccess == "function") {
+                    opt.onGetListSuccess(res)
+                } else {
+                    tableData.value = res.list
+                    total.value = res.totalCount
+                }
             }).finally(() => {
                 loading.value = false
             })
-        }
-
-        //修改状态
-        const handleStatuschange = (status, row) => {
-            row.statusLoading = true
-            opt.updateStatus(row.id, status)
-                .then(res => {
-                    toast("修改状态成功")
-                    row.status = status
-                })
-                .finally(() => {
-                    row.statusLoading = false
-                })
-        }
-        return {
-            searchForm,
-            resetSearchForm,
-            tableData,
-            loading,
-            currentPage,
-            total,
-            limit,
-            getData,
-            handleDelete,
-            handleStatuschange
-
-        }
     }
+    getData()
+
+
+    //删除
+    const handleDelete = (id) => {
+        loading.value = true
+        opt.delete(id).then(res => {
+            toast("删除成功")
+            getData()
+        }).finally(() => {
+            loading.value = false
+        })
+    }
+
+    //修改状态
+    const handleStatuschange = (status, row) => {
+        row.statusLoading = true
+        opt.updateStatus(row.id, status)
+            .then(res => {
+                toast("修改状态成功")
+                row.status = status
+            })
+            .finally(() => {
+                row.statusLoading = false
+            })
+    }
+    return {
+        searchForm,
+        resetSearchForm,
+        tableData,
+        loading,
+        currentPage,
+        total,
+        limit,
+        getData,
+        handleDelete,
+        handleStatuschange
+
+    }
+
 }
 
 //新增，修改

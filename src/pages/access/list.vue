@@ -12,9 +12,9 @@
                     <span>{{ data.name }}</span>
                     <div class="ml-auto">
                         <el-switch modelValue="status" :active-value="1" inactive-value="0" />
-                        <el-button text type="primary" size="small">zc</el-button>
-                        <el-button text type="primary" size="small">zc</el-button>
-                        <el-button text type="primary" size="small">zc</el-button>
+                        <el-button text type="primary" size="small">修改</el-button>
+                        <el-button text type="primary" size="small">增加</el-button>
+                        <el-button text type="primary" size="small">删除</el-button>
                     </div>
                 </div>
             </template>

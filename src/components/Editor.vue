@@ -1,6 +1,7 @@
 <template>
     <editor v-model="content" tag-name="div" :init="init" />
-    <ChooseImage :preview="false" ref="ChooseImageRef" :limit="20"></ChooseImage>
+    <ChooseImage :preview="false" ref="ChooseImageRef" :limit="20">
+    </ChooseImage>
 </template>
 <script setup>
 import tinymce from "tinymce/tinymce";
@@ -45,6 +46,7 @@ import "tinymce/plugins/wordcount" // 字数统计插件
 const props = defineProps({
     modelValue: String,
 })
+
 const emit = defineEmits(["update:modelValue"])
 const ChooseImageRef = ref(null)
 // 配置
@@ -81,8 +83,6 @@ const init = {
                         editor.insertContent(`<img src="${url}" style="width:100%;" />`)
                     })
                 })
-
-
             }
         })
     }

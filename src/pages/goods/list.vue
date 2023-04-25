@@ -168,6 +168,7 @@
         </el-card>
         <Banners ref="bannersRef" @reload-data="getData" />
         <Content ref="contentRef" @reload-data="getData" />
+        <Skus ref="skusRef" @reload-data="getData" />
     </div>
 </template>
 <script setup>
@@ -180,6 +181,7 @@ import SearchItem from "~/components/SearchItem.vue";
 import ListHeader from "~/components/ListHeader.vue";
 import Banners from "./banners.vue";
 import Content from "./content.vue";
+import Skus from "./skus.vue";
 
 import {
     getGoodsList, updateGoodsStatus,
@@ -217,6 +219,7 @@ const {
         tableData.value = res.list.map(o => {
             o.bannersLoading = false
             o.contentLoading = false
+            o.skusLoading = false
             return o
         })
         total.value = res.totalCount
@@ -285,6 +288,9 @@ const handleSetGoodsBanners = (row) => bannersRef.value.open(row)
 //设置商品详情
 const contentRef = ref(null)
 const handleSetGoodsContent = (row) => contentRef.value.open(row)
+//设置sku详情
+const skusRef = ref(null)
+const handleSetGoodsSkus = (row) => skusRef.value.open(row)
 
 </script>
 <style></style>

@@ -167,6 +167,7 @@
             </FormDrawer>
         </el-card>
         <Banners ref="bannersRef" @reload-data="getData" />
+        <Content ref="contentRef" @reload-data="getData" />
     </div>
 </template>
 <script setup>
@@ -178,6 +179,7 @@ import Search from "~/components/Search.vue";
 import SearchItem from "~/components/SearchItem.vue";
 import ListHeader from "~/components/ListHeader.vue";
 import Banners from "./banners.vue";
+import Content from "./content.vue";
 
 import {
     getGoodsList, updateGoodsStatus,
@@ -214,6 +216,7 @@ const {
     onGetListSuccess: (res) => {
         tableData.value = res.list.map(o => {
             o.bannersLoading = false
+            o.contentLoading = false
             return o
         })
         total.value = res.totalCount
@@ -279,6 +282,9 @@ getCategoryList().then(res => category_list.value = res)
 //设置轮播图
 const bannersRef = ref(null)
 const handleSetGoodsBanners = (row) => bannersRef.value.open(row)
+//设置商品详情
+const contentRef = ref(null)
+const handleSetGoodsContent = (row) => contentRef.value.open(row)
 
 </script>
 <style></style>

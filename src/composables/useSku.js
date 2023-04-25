@@ -1,6 +1,6 @@
 import { ref, nextTick, computed } from "vue";
 import { createGoodsSkusCard, updateGoodsSkusCard, deleteGoodsSkusCard } from "~/api/goods.js"
-
+import { useArrayMoveUp, useArrayMoveDown } from "~/composables/util.js"
 
 //当前商品ID
 export const goodsId = ref(0)
@@ -74,6 +74,18 @@ export function handleDelete(item) {
 
         })
 }
+
+//排序规格选项
+
+export const bodyLoading = ref(false)
+export function sortCard(action, index) {
+    if (action = "up") {
+        useArrayMoveUp(sku_card_list.value, index)
+    } else {
+        useArrayMoveDown(sku_card_list.value, index)
+    }
+}
+
 //初始化规格值
 export function initSkuCardItem(id) {
     const item = sku_card_list.value.find(o => o.id = id)

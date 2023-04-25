@@ -11,10 +11,11 @@
                             </el-icon>
                         </template>
                     </el-input>
-                    <el-button class="ml-auto" size="small"><el-icon>
+                    <el-button class="ml-auto" size="small" @click="sortCard('up', index)" :disabled="index == 0"><el-icon>
                             <Top />
                         </el-icon></el-button>
-                    <el-button size="small"><el-icon>
+                    <el-button size="small" @click="sortCard('down', index)"
+                        :disabled="index === sku_card_list.length - 1"><el-icon>
                             <Bottom />
                         </el-icon></el-button>
                     <el-popconfirm title="是否要删除" confirm-button-text="确认" cancel-button-text="取消"
@@ -37,7 +38,7 @@
 import SkuCardItem from './SkuCardItem.vue';
 import {
     sku_card_list, addSkuCardEvent, btnLoading, handleUpdate, handleDelete
-
+    , sortCard
 } from "~/composables/useSku.js"
 </script>
 <style>

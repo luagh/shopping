@@ -46,3 +46,13 @@ export function updateGoodsSkus(id, data) {
 export function createGoodsSkusCard(data) {
     return axios.post(`/admin/goods_skus_card`, data)
 }
+//商品规格选项修改
+export function updateGoodsSkusCard(id, data) {
+    return axios.post(`/admin/goods_skus_card/${id}`, data)
+}
+
+//商品规格选项删除
+export function deleteGoodsSkusCard(id) {
+    return axios.post(`/admin/goods_skus_card/${id}/delete`)
+}
+

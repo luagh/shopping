@@ -10,6 +10,7 @@
 
                 </template>
             </el-popconfirm>
+            <slot />
         </div>
         <el-tooltip v-if="btns.includes('refresh')" effect="dark" content="刷新数据" placement="top">
             <el-button text @click="$emit('refresh')">

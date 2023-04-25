@@ -14,12 +14,12 @@
                 <template #show>
                     <SearchItem label="商品分类">
                         <el-cascader v-model="searchForm.category_id" :options="category_list"
-                            :props="{ value: 'id', label: 'name', children: 'children', checkStrictly: true, emitPath: false }"
+                            :props="{ value: 'id', label: 'name', children: 'child', checkStrictly: true, emitPath: false }"
                             placeholder="请选择商品分类" />
                     </SearchItem>
                 </template>
             </Search>
-            <div class="flex items-center justify-between mb-4">
+            <!-- <div class="flex items-center justify-between mb-4">
                 <el-button type="primary" size="small" @click="handlecreate">新增</el-button>
 
                 <el-tooltip effect="dark" content="刷新数据" placement="top">
@@ -30,9 +30,18 @@
                     </el-button>
                 </el-tooltip>
             </div>
+         -->
+            <ListHeader layout="create,refresh,delete" @create="handleCreate" @refresh="getData"
+                @delete="handleMultiDelete">
+                <el-button size="small" @click="handleMultiStatusChange(1)"
+                    v-if="searchForm.tab == 'all' || searchForm.tab == 'off'">上架</el-button>
+                <el-button size="small" @click="handleMultiStatusChange(0)"
+                    v-if="searchForm.tab == 'all' || searchForm.tab == 'saling'">下架</el-button>
+            </ListHeader>
 
-            <el-table @selection-change="handleSelectionchange" :data="tableData" stripe style="width: 100%"
-                v-loading="loading">
+            <el-table ref="multipleTableRef" @selection-change="handleSelectionChange" :data="tableData" stripe
+                style="width: 100%" v-loading="loading">
+                <el-table-column type="selection" width="55" />
                 <el-table-column prop="title" label="商品" width="300">
                     <template #default="{ row }">
                         <div class="flex">
@@ -178,6 +187,8 @@ import FormDrawer from "~/components/FormDrawer.vue";
 import ChooseImage from "~/components/Chooselmage.vue";
 import Search from "~/components/Search.vue";
 import SearchItem from "~/components/SearchItem.vue";
+import ListHeader from "~/components/ListHeader.vue";
+
 import {
     getGoodsList, updateGoodsStatus,
     createGoods, updateGoods, deleteGoods
@@ -199,7 +210,10 @@ const {
     limit,
     getData,
     handleDelete,
-    handleStatuschange
+    handleSelectionChange,
+    multipleTableRef,
+    handleMultiDelete,
+    handleMultiStatusChange
 } = useInitTable({
     searchForm: {
         title: "",

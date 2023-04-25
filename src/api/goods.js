@@ -55,4 +55,21 @@ export function updateGoodsSkusCard(id, data) {
 export function deleteGoodsSkusCard(id) {
     return axios.post(`/admin/goods_skus_card/${id}/delete`)
 }
+//排序接口
+export function sortGoodsSkusCard(data) {
+    return axios.post(`/admin/goods_skus_card/sort`, data)
+}
 
+export function createGoodsSkusCardValue(data) {
+    return axios.post(`/admin/goods_skus_card_value`, data)
+}
+
+//商品规格选项值修改
+export function updateGoodsSkusCardValue(id, data) {
+    return axios.post(`/admin/goods_skus_card_value/${id}`, data)
+}
+
+//商品规格选项值删除
+export function deleteGoodsSkusCardValue(id) {
+    return axios.post(`/admin/goods_skus_card_value/${id}/delete`)
+}

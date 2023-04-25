@@ -19,19 +19,7 @@
                     </SearchItem>
                 </template>
             </Search>
-            <!-- <div class="flex items-center justify-between mb-4">
-                <el-button type="primary" size="small" @click="handlecreate">新增</el-button>
-
-                <el-tooltip effect="dark" content="刷新数据" placement="top">
-                    <el-button text @click="getData">
-                        <el-icon size="20">
-                            <Refresh />
-                        </el-icon>
-                    </el-button>
-                </el-tooltip>
-            </div>
-         -->
-            <ListHeader layout="create,refresh,delete" @create="handleCreate" @refresh="getData"
+            <ListHeader layout="create,refresh,delete" @create="handlecreate" @refresh="getData"
                 @delete="handleMultiDelete">
                 <el-button size="small" @click="handleMultiStatusChange(1)"
                     v-if="searchForm.tab == 'all' || searchForm.tab == 'off'">上架</el-button>
@@ -178,6 +166,7 @@
                 </el-form>
             </FormDrawer>
         </el-card>
+        <Banners ref="bannersRef" @reload-data="getData" />
     </div>
 </template>
 <script setup>
@@ -188,6 +177,7 @@ import ChooseImage from "~/components/Chooselmage.vue";
 import Search from "~/components/Search.vue";
 import SearchItem from "~/components/SearchItem.vue";
 import ListHeader from "~/components/ListHeader.vue";
+import Banners from "./banners.vue";
 
 import {
     getGoodsList, updateGoodsStatus,
@@ -223,7 +213,7 @@ const {
     getList: getGoodsList,
     onGetListSuccess: (res) => {
         tableData.value = res.list.map(o => {
-            o.statusLoading = false
+            o.bannersLoading = false
             return o
         })
         total.value = res.totalCount
@@ -286,8 +276,9 @@ const tabbars = [
 
 const category_list = ref([])
 getCategoryList().then(res => category_list.value = res)
-
-const showSearch = ref(false)
+//设置轮播图
+const bannersRef = ref(null)
+const handleSetGoodsBanners = (row) => bannersRef.value.open(row)
 
 </script>
 <style></style>

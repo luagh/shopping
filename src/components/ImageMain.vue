@@ -112,19 +112,30 @@ const handleDelete = (id) => {
 }
 //上传成功
 const handleUploadSuccess = () => getData(1)
+const props = defineProps({
+    openChoose: {
+        type: Boolean,
+        default: false
+    },
 
+    limit: {
+        type: Number,
+        default: 1
+    }
+})
 
 //选中的图片
 const emit = defineEmits(["choose"])
 const checkedImage = computed(() => list.value.filter(o => o.checked))
 
 const handleChooseChange = (item) => {
-    if (item.checked && checkedImage.value.length > 1) {
+    if (item.checked && checkedImage.value.length > props.limit) {
         item.checked = false
-        return toast(`最多只能选中1张`, "error")
+        return toast(`最多只能选中${props.limit}张`, "error")
     }
     emit("choose", checkedImage.value)
 }
+
 
 defineExpose({
     loadData,

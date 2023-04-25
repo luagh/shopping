@@ -32,3 +32,11 @@ export function deleteGoods(ids) {
     })
 }
 
+export function readGoods(id) {
+    return axios.get(`/admin/goods/read/${id}`)
+}
+// 设置轮播图
+export function setGoodsBanner(id, data) {
+    return axios.post(`/admin/goods/banners/${id}`, data)
+}
+

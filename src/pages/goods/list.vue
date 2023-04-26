@@ -19,8 +19,10 @@
                     </SearchItem>
                 </template>
             </Search>
-            <ListHeader layout="create,refresh,delete" @create="handlecreate" @refresh="getData"
-                @delete="handleMultiDelete">
+            <ListHeader layout="create,refresh" @create="handlecreate" @refresh="getData">
+                <el-button type="primary" size="small" @click="handleMultiDelete"
+                    v-if="searchForm.tab != 'delete'">批量删除</el-button>
+                <el-button type="warning" size="small" @click="handleRestoreGoods" v-else>恢复商品</el-button>
                 <el-button size="small" @click="handleMultiStatusChange(1)"
                     v-if="searchForm.tab == 'all' || searchForm.tab == 'off'">上架</el-button>
                 <el-button size="small" @click="handleMultiStatusChange(0)"
@@ -79,7 +81,7 @@
                                 @click="handleEdit(scope.row)">修改</el-button>
 
                             <el-button class="px-1"
-                                :type="(scope.row.sku_type == 0 && !scope.row.sku_value) || (scope.row.sku_type == 1 && scope.row.goods_skus != null) ? 'danger' : 'primary'"
+                                :type="(scope.row.sku_type == 0 && !scope.row.sku_value) || (scope.row.sku_type == 1 && scope.row.goods_skus.length) ? 'danger' : 'primary'"
                                 size="small" text @click="handleSetGoodsSkus(scope.row)"
                                 :loading="scope.row.skusLoading">商品规格</el-button>
 
@@ -182,10 +184,10 @@ import ListHeader from "~/components/ListHeader.vue";
 import Banners from "./banners.vue";
 import Content from "./content.vue";
 import Skus from "./skus.vue";
-
+import { toast } from "~/composables/util.js"
 import {
     getGoodsList, updateGoodsStatus,
-    createGoods, updateGoods, deleteGoods
+    createGoods, updateGoods, deleteGoods, restoreGoods
 } from "~/api/goods.js"
 import {
     getCategoryList
@@ -207,7 +209,8 @@ const {
     handleSelectionChange,
     multipleTableRef,
     handleMultiDelete,
-    handleMultiStatusChange
+    handleMultiStatusChange,
+    multiselectionIds
 } = useInitTable({
     searchForm: {
         title: "",
@@ -292,5 +295,21 @@ const handleSetGoodsContent = (row) => contentRef.value.open(row)
 const skusRef = ref(null)
 const handleSetGoodsSkus = (row) => skusRef.value.open(row)
 
+const handleRestoreGoods = () => {
+    loading.value = true
+    restoreGoods(multiselectionIds.value)
+        .then(res => {
+            toast("删除成功")
+            //清空选中
+            if (multipleTableRef.value) {
+                multipleTableRef.value.clearSelection()
+            }
+            getData()
+        })
+        .finally(() => {
+            loading.value = false
+        })
+
+}
 </script>
 <style></style>

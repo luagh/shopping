@@ -6,6 +6,8 @@
                 <div class="custom-tree-node">
                     <span>{{ data.name }}</span>
                     <div class="ml-auto">
+                        <el-button text type="primary" size="small" @click.stop="openGoodsDrawer(data)"
+                            :loading="data.goodsDrawerLoading">推荐商品</el-button>
                         <el-switch :modelValue="data.status" :active-value="1" inactive-value="0"
                             @change="handlestatusChange($event, data)" />
                         <el-button text type="primary" size="small" @click.stop="handleEdit(data)">修改</el-button>
@@ -28,6 +30,9 @@
                 </el-form-item>
             </el-form>
         </FormDrawer>
+        <GoodsDrawer ref="GoodsDrawerRef">
+
+        </GoodsDrawer>
     </el-card>
 </template>
 <script setup>
@@ -35,7 +40,8 @@ import { useInitTable, useInitForm } from "~/composables/useCommon.js"
 import { getCategoryList, createCategory, updateCategory, updateCategoryStatus, deleteCategory } from "~/api/category.js";
 import FormDrawer from "~/components/FormDrawer.vue";
 import ListHeader from "~/components/ListHeader.vue";
-
+import GoodsDrawer from "./components/GoodsDrawer.vue";
+import { ref } from "vue"
 const {
     loading,
     tableData,
@@ -45,7 +51,10 @@ const {
 } = useInitTable({
     getList: getCategoryList,
     onGetListSuccess: (res) => {
-        tableData.value = res
+        tableData.value = res.map(o => {
+            o.goodsDrawerLoading = false
+            return o
+        })
 
     },
     delete: deleteCategory,
@@ -70,7 +79,8 @@ const {
     create: createCategory
 })
 
-
+const GoodsDrawerRef = ref()
+const openGoodsDrawer = (data) => GoodsDrawerRef.value.open(data)
 </script>
 <style>
 .custom-tree-node {

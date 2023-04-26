@@ -22,3 +22,4 @@ export function updateSkusStatus(id, status) {
         status
     })
 }
+

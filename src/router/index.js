@@ -45,8 +45,8 @@ const routes = [{
 
 //动态路由 用于匹配菜单动态添加路由
 const asyncRoutes = [{
-    path: "/dashboard",
-    name: "/dashboard",
+    path: "/",
+    name: "/",
     component: Index,
     meta: {
         title: "后台首页"

@@ -4,7 +4,7 @@
             v-loading="item.loading">
             <template #header>
                 <div class="flex items-center">
-                    <el-input v-model="item.text" placeholder="规格名称" style="width:2o0px;" @change="handleUpdate(item)">
+                    <el-input v-model="item.text" placeholder="规格名称" style="width:200px;" @change="handleUpdate(item)">
                         <template #append>
                             <el-icon @click="handleChooseSku(item)">
                                 <more />

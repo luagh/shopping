@@ -79,7 +79,7 @@ const {
     create: createCategory
 })
 
-const GoodsDrawerRef = ref()
+const GoodsDrawerRef = ref(null)
 const openGoodsDrawer = (data) => GoodsDrawerRef.value.open(data)
 </script>
 <style>

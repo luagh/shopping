@@ -1,8 +1,8 @@
 <template>
-    <FormDrawer ref="formDrawerRef" title="推荐商品">
+    <FormDrawer ref="formDrawerRef" confirmText="关联" title="推荐商品" @submit="handleConnect">
         <el-table :data="tableData" border stripe style="width: 100%;">
             <el-table-column prop="goods_id" label="ID" width="60" />
-            <el-table-column label="商品封面" width="60">
+            <el-table-column label="商品封面" width="180">
                 <template #default="{ row }">
                     <el-image :src="row.cover" fit="fill" :lazy="true" style="width:64px;height:64px;"></el-image>
                 </template>
@@ -24,17 +24,20 @@
         </el-table>
 
     </FormDrawer>
+    <ChooseGoods ref="ChooseGoodsRef"></ChooseGoods>
 </template>
 <script setup>
 import { ref } from "vue"
 import { toast } from "~/composables/util.js"
 import FormDrawer from "~/components/FormDrawer.vue";
+import ChooseGoods from "~/components/ChooseGoods.vue";
 import {
-    getCategoryGoods, deleteCategoryGoods
+    getCategoryGoods, deleteCategoryGoods, connectCategoryGoods
 } from "~/api/category.js"
 const formDrawerRef = ref(null)
 const tableData = ref([])
 const category_id = ref(0)
+
 const open = (item) => {
     category_id.value = item.id
     item.goodsDrawerLoading = true
@@ -46,6 +49,8 @@ const open = (item) => {
     })
 
 }
+
+
 
 function getData() {
     return getCategoryGoods(category_id.value).then(res => {
@@ -67,24 +72,23 @@ const handleDelete = (row) => {
     })
 }
 
-// const chooseGoodsRef = ref(null)
-// const handleConnect = () => {
-//     //console.log(111);
-//     chooseGoodsRef.value.open((goods_ids) => {
-//         formDrawerRef.value.showLoading()
-//         connectCategoryGoods({
-//             id: category_id.value,
-//             goods_ids: goods_ids
-//         }).then(res => {
-//             getData()
-//             toast('关联成功')
-//         }).finally(() => {
-//             formDrawerRef.value.hideLoading()
+const ChooseGoodsRef = ref(null)
+const handleConnect = () => {
+    ChooseGoodsRef.value.open((goods_ids) => {
+        formDrawerRef.value.showLoading()
+        connectCategoryGoods({
+            category_id: category_id.value,
+            goods_ids
+        }).then(res => {
+            getData()
+            toast('关联成功')
+        }).finally(() => {
+            formDrawerRef.value.hideLoading()
 
-//         })
+        })
 
-//     })
-// }
+    })
+}
 
 defineExpose({
     open

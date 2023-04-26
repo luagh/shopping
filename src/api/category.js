@@ -28,3 +28,6 @@ export function getCategoryGoods(id) {
 export function deleteCategoryGoods(id) {
     return axios.post(`/admin/app_category_item/${id}/delete`)
 }
+export function connectCategoryGoods(data) {
+    return axios.post(`/admin/app_category_item`, data)
+}

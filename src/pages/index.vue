@@ -1,5 +1,15 @@
 <template>
     <div>
+        <el-row :gutter="20" class="mt-5">
+            <el-col :span="12" :offset="0">
+                <IndexChart />
+            </el-col>
+            <el-col :span="12" :offset="0">
+                <IndexCard title="店铺及商品提示" tip="店铺及商品提示" :btns='goods' class="mb-3" />
+                <IndexCard title="交易提示" tip="需要立即处理的订单" :btns='order' />
+
+            </el-col>
+        </el-row>
         <el-row :gutter="20">
 
             <template v-if="panels.length == 0">
@@ -62,26 +72,7 @@
         </el-row>
         <IndexNavs />
 
-        <el-row :gutter="20" class="mt-5">
-            <el-col :span="12" :offset="0">
-                <IndexChart />
-            </el-col>
-            <el-col :span="12" :offset="0">
-                <IndexCard title="店铺及商品提示" tip="店铺及商品提示" :btns='goods' class="mb-3" />
-                <IndexCard title="交易提示" tip="需要立即处理的订单" :btns='order' />
 
-            </el-col>
-        </el-row>
-        <IndexNavs />
-        <el-row :gutter="20" class="mt-5">
-            <el-col :span="12" :offset="0">
-                <IndexChart v-permission="['getstatistics3,GET']" />
-            </el-col>
-            <el-col :span="12" :offset="0">
-                <IndexCard title="店铺及商品提示" tip="店铺及商品提示" :btns="goods" class="mb-3" />
-                <IndexCard title="交易提示" tip="需要立即处理的订单" :btns="order" />
-            </el-col>
-        </el-row>
 
     </div>
 </template>
@@ -96,8 +87,9 @@ import IndexCard from "~/components/IndexCard.vue"
 const panels = ref([])
 getStatistics1()
     .then(res => {
+        console.log(res);
         panels.value = res.panels
-        console.log(panels.value);
+
     });
 const goods = ref([])
 const order = ref([])

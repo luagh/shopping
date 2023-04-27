@@ -62,6 +62,7 @@ function getData() {
     let option = {
         xAxis: {
             type: 'category',
+            boundaryGap: false,
             data: []
         },
         yAxis: {
@@ -70,11 +71,8 @@ function getData() {
         series: [
             {
                 data: [],
-                type: 'bar',
-                showBackground: true,
-                backgroundStyle: {
-                    color: 'rgba(180, 180, 180, 0.2)'
-                }
+                type: 'line',
+                areaStyle: {}
             }
         ]
     };

@@ -5,7 +5,7 @@
         </el-tabs>
         <el-card shadow="never" class="border-0">
             <!-- 搜索 -->
-            <Search :model="searchForm" @search="onSearch" @reset="resetSearchForm">
+            <Search :model="searchForm" @search="getData" @reset="resetSearchForm">
                 <SearchItem label="订单编号">
                     <el-input v-model="searchForm.no" placeholder="订单编号" clearable></el-input>
                 </SearchItem>
@@ -137,9 +137,10 @@ import Search from "~/components/Search.vue";
 import SearchItem from "~/components/SearchItem.vue";
 import ListHeader from "~/components/ListHeader.vue";
 import ExportExcel from "./ExportExcel.vue";
-import { toast } from "~/composables/util.js"
+import InfoModal from "./InfoModal.vue";
+import { toast, showPrompt, showModal } from "~/composables/util.js"
 import {
-    getOrderList, deleteOrder
+    getOrderList, deleteOrder, refundOrder
 } from "~/api/order.js"
 
 import { useInitTable } from '~/composables/useCommon.js'
@@ -215,6 +216,40 @@ const tabbars = [
 const exportExcelRef = ref(null)
 const handleExportExcel = () => {
     exportExcelRef.value.open()
+}
+const infoModelRef = ref(null)
+const info = ref(null)
+const openInfoModal = (row) => {
+    row.order_items = row.order_items.map(o => {
+        if (o.skus_type == 1 && o.goods_skus) {
+            let s = []
+            for (const k in o.goods_skus.skus) {
+                s.push(o.goods_skus.skus[k].value)
+            }
+            o.sku = s.join(",")
+        }
+        return o
+    })
+    info.value = row
+    infoModelRef.value.open()
+}
+
+//退款处理
+
+const handleRefund = (id, agree) => {
+    (agree ? showModal('是否同意该订单退款 ') : showPrompt('请输入拒绝的理由'))
+        .then(({ value }) => {
+            let data = { agree }
+            if (!agree) {
+                data.disagree_reason = value
+            }
+            refundOrder(id, data).then(res => {
+                getData()
+                toast('操作成功')
+            })
+
+        })
+
 }
 
 

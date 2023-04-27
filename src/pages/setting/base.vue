@@ -93,7 +93,7 @@
 import { getSysconfig, setSysconfig } from "~/api/sysconfig.js"
 import { ref, reactive } from "vue"
 import { toast } from "~/composables/util.js"
-const activeName = ref(null)
+const activeName = ref('first')
 const form = reactive({
     "open_reg": 1,
     "reg_method": "username",

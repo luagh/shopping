@@ -5,7 +5,7 @@ import store from "./store"
 //axios请求库
 
 const service = axios.create({
-    baseURL: "/api",
+    baseURL: import.meta.env.VITE_APP_BASE_API,
 
 })
 // 添加请求拦截器

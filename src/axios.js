@@ -5,7 +5,7 @@ import store from "./store"
 //axios请求库
 
 const service = axios.create({
-    baseURL: "/api"
+    baseURL: "/api",
 
 })
 // 添加请求拦截器
